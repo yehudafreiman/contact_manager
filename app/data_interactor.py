@@ -3,6 +3,7 @@ import os
 from typing import Optional
 
 
+# initial a contact
 class Contact:
     def __init__(self, id: int, first_name: str, last_name: str, phone_number: str):
         self.id = id
@@ -10,6 +11,7 @@ class Contact:
         self.last_name = last_name
         self.phone_number = phone_number
 
+    # turn object to a dictionary
     def to_dict(self):
         return {
             "id": self.id,
@@ -93,7 +95,7 @@ def update_contact(contact_id: int,
     connection.close()
     return success
 
-
+# delete a contact
 def delete_contact(contact_id: int) -> bool:
     connection = get_db_connection()
     cursor = connection.cursor()
