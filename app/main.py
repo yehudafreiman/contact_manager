@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 import data_interactor, models
 
+
 app = FastAPI(title="contact manager API")
 
 # POST - create new contact
