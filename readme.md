@@ -64,7 +64,6 @@ docker compose up -d
 sleep 30
 curl http://localhost:8000/contacts # Should show original contacts
 ```
-
 ## Clean up
 ```bash
 docker compose down -v
