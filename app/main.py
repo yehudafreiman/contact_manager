@@ -24,12 +24,12 @@ contacts = [
 ]
 
 # READ
-app.get("/contacts")
+@app.get("/contacts")
 def get_all_contacts():
     return contacts
 
 # POST
-app.get("/contacts")
+@app.post("/contacts")
 def create_new_contact(contact: ContactCreate):
     new_id = len(contacts) + 1
     new_contact = {
@@ -39,28 +39,28 @@ def create_new_contact(contact: ContactCreate):
         "phone_number": contact.phone_number
     }
     contacts.append(new_contact)
-    return {"massage": "Contact created successfully",
+    return {"message": "Contact created successfully",
             "id": new_id}
 
 # PUT
-app.get("/contacts/{id}")
+@app.put("/contacts/{contact_id}")
 def update_existing_contact(contact_id: int, update_contact: ContactUpdate):
     for contact in contacts:
         if contact["id"] == contact_id:
             if update_contact.first_name is not None:
-                contacts["first_name"] = update_contact.first_name
+                contact["first_name"] = update_contact.first_name
             if update_contact.last_name is not None:
-                contacts["last_name"] = update_contact.last_name
+                contact["last_name"] = update_contact.last_name
             if update_contact.phone_number is not None:
-                contacts["phone_number"] = update_contact.phone_number
-        return {"massage": "Contact update successfully"}
+                contact["phone_number"] = update_contact.phone_number
+        return {"message": "Contact update successfully"}
     raise HTTPException(status_code=404, detail="Contact not found")
 
 # DELETE
-app.get("/contacts/{id}")
+@app.delete("/contacts/{contact_id}")
 def delete_contact(contact_id: int):
     for index, contact in enumerate(contacts):
-        if contact["todo_id"] == contact_id:
+        if contact["id"] == contact_id:
             contacts.pop(index)
             return {"message": "Contact delete successfully"}
     raise HTTPException(status_code=404, detail="Todo not found")
