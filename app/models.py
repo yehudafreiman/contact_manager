@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 
+
 # models
 class ContactCreate(BaseModel):
     first_name: str
