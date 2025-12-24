@@ -1,6 +1,5 @@
 import mysql.connector
 import os
-from typing import Optional
 
 
 # initial a contact
@@ -20,6 +19,7 @@ class Contact:
             "phone_number": self.phone_number
         }
 
+
 # create database connection
 def get_db_connection():
     connection = mysql.connector.connect(
@@ -31,19 +31,26 @@ def get_db_connection():
     )
     return connection
 
+
 # create new contact
-def create_contact(first_name: str, last_name: str, phone_number: str) -> int:
+def create_contact(contact_data: dict) -> int:
     connection = get_db_connection()
     cursor = connection.cursor()
 
-    query = """INSERT INTO contacts (first_name, last_name, phone_number) VALUES (%s, %s, %s)"""
-    cursor.execute(query, (first_name, last_name, phone_number))
+    query = """INSERT INTO contacts (first_name, last_name, phone_number) \
+               VALUES (%s, %s, %s)"""
+    cursor.execute(query, (
+        contact_data["first_name"],
+        contact_data["last_name"],
+        contact_data["phone_number"]
+    ))
 
     connection.commit()
     new_id = cursor.lastrowid
     cursor.close()
     connection.close()
     return new_id
+
 
 # get all contacts
 def get_all_contacts() -> list[Contact]:
@@ -60,26 +67,29 @@ def get_all_contacts() -> list[Contact]:
     connection.close()
     return contacts
 
+
 # update a contact
-def update_contact(contact_id: int,
-                   first_name: Optional[str] = None,
-                   last_name: Optional[str] = None,
-                   phone_number: Optional[str] = None) -> bool:
+def update_contact(contact_id: int, contact_data: dict) -> bool:
     connection = get_db_connection()
     cursor = connection.cursor()
 
     updates = []
     params = []
-    if first_name is not None:
+
+    # Build dynamic UPDATE query based on provided fields
+    if "first_name" in contact_data and contact_data["first_name"] is not None:
         updates.append("first_name = %s")
-        params.append(first_name)
-    if last_name is not None:
+        params.append(contact_data["first_name"])
+    if "last_name" in contact_data and contact_data["last_name"] is not None:
         updates.append("last_name = %s")
-        params.append(last_name)
-    if phone_number is not None:
+        params.append(contact_data["last_name"])
+    if "phone_number" in contact_data and contact_data["phone_number"] is not None:
         updates.append("phone_number = %s")
-        params.append(phone_number)
+        params.append(contact_data["phone_number"])
+
     if not updates:
+        cursor.close()
+        connection.close()
         return False
 
     params.append(contact_id)
@@ -87,10 +97,12 @@ def update_contact(contact_id: int,
     query = f"UPDATE contacts SET {', '.join(updates)} WHERE id = %s"
     cursor.execute(query, params)
 
+    connection.commit()
     success = cursor.rowcount > 0
     cursor.close()
     connection.close()
     return success
+
 
 # delete a contact
 def delete_contact(contact_id: int) -> bool:
@@ -105,4 +117,3 @@ def delete_contact(contact_id: int) -> bool:
     cursor.close()
     connection.close()
     return success
-
