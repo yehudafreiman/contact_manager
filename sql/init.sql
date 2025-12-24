@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS contacts (
 );
 
 -- insert data
-INSERT INTO contacts (first_name, last_name, phone_number) VALUES
+INSERT IGNORE INTO contacts (first_name, last_name, phone_number) VALUES
     ('John', 'Doe', '050-1234567'),
     ('Jane', 'Smith', '052-9876543'),
     ('Bob', 'Johnson', '054-5555555'),
