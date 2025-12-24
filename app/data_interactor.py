@@ -36,10 +36,7 @@ def create_contact(first_name: str, last_name: str, phone_number: str) -> int:
     connection = get_db_connection()
     cursor = connection.cursor()
 
-    query = """
-            INSERT INTO contacts (first_name, last_name, phone_number)
-            VALUES (%s, %s, %s) \
-            """
+    query = """INSERT INTO contacts (first_name, last_name, phone_number) VALUES (%s, %s, %s)"""
     cursor.execute(query, (first_name, last_name, phone_number))
 
     connection.commit()
